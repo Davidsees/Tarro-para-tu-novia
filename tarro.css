@@ -1,0 +1,125 @@
+:root{
+  --bg:#000;
+  --jar-w:360px;
+  --jar-h:420px;
+  --ball-size:52px;
+  --lid-h:54px;
+}
+
+/* Reset */
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;background:var(--bg);font-family:Arial,sans-serif;color:#fff;overflow:hidden;}
+.stage{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:18px;padding:28px;z-index:10;position:relative;}
+.gacha-wrap{position:relative;width:var(--jar-w);height:calc(var(--jar-h)+var(--lid-h));display:flex;align-items:flex-start;justify-content:center;z-index:15;}
+
+/* Tapa */
+.lid{position:absolute;top:0;left:50%;transform:translateX(-50%);width:84%;height:var(--lid-h);background:linear-gradient(180deg,#fff,#f0f0f0);border-radius:999px;border:3px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:30;box-shadow:0 8px 30px rgba(255,255,255,0.06),0 2px 8px rgba(0,0,0,0.6);}
+.lid:active{transform:translateX(-50%) translateY(2px) scale(0.995);}
+.lid-top{width:70%;height:12px;border-radius:8px;background:linear-gradient(180deg,#fff,#f0f0f0);box-shadow:inset 0 1px rgba(0,0,0,0.06);}
+
+/* Tarro */
+.jar{position:absolute;top:calc(var(--lid-h)*0.6);width:100%;height:var(--jar-h);border-radius:48% / 10%;background:radial-gradient(120% 60% at 50% 20%,rgba(255,255,255,0.06),rgba(255,255,255,0.03)10%,rgba(0,0,0,0.85)80%);border:2px solid rgba(255,255,255,0.08);overflow:visible;display:flex;align-items:flex-end;justify-content:center;z-index:10;box-shadow:inset 0 30px 60px rgba(255,255,255,0.02),0 30px 50px rgba(0,0,0,0.7);}
+.jar-glow{position:absolute;inset:0;border-radius:48% / 10%;background:radial-gradient(circle at 50% 20%, rgba(255,255,255,0.12), rgba(255,255,255,0.04)30%, rgba(0,0,0,0.85)70%);pointer-events:none;z-index:5;mix-blend-mode:screen;}
+.jar-front{position:absolute;left:50%;transform:translateX(-50%);top:8%;width:86%;height:84%;border-radius:46% / 10%;pointer-events:none;z-index:25;background:linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01));box-shadow:inset 0 6px 20px rgba(255,255,255,0.02);backdrop-filter:blur(1px);}
+
+/* Mensaje debajo del tarro */
+.info {
+  text-align: center;                    /* centrado horizontal */
+  font-size: 18px;                       /* tamaño de letra */
+  color: #000;                           /* letra negra */
+  margin-top: calc(var(--jar-h) + var(--lid-h) + 10px); /* debajo del tarro */
+  z-index: 15;                           /* encima del fondo pero debajo de mariposas o tarro */
+  position: relative;                    /* para poder usar z-index */
+
+  background: rgba(255, 255, 255, 0.8); /* fondo blanco translúcido */
+  padding: 8px 16px;                     /* espacio interno */
+  border-radius: 12px;                   /* esquinas redondeadas */
+  box-shadow: 0 0 20px rgba(255,255,255,0.7), 0 0 40px rgba(255,255,255,0.4); /* efecto neón */
+}
+
+/* Área donde están las bolas con posiciones absolutas */
+.jar-inner{position:relative;width:88%;height:82%;margin-bottom:8%;z-index:20;pointer-events:auto;}
+
+/* Bola base */
+.ball{width:var(--ball-size);height:var(--ball-size);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:transparent;box-shadow:0 0 28px currentColor,0 8px 24px rgba(0,0,0,0.6);position:absolute;cursor:default;user-select:none;transform-origin:center;}
+.ball::after{content:'';position:absolute;left:14%;top:12%;width:28%;height:18%;border-radius:50%;background:rgba(255,255,255,0.7);opacity:0.9;transform:rotate(-18deg);filter:blur(1px);}
+
+/* Colores neón */
+.neon-red{background:radial-gradient(circle at 30% 25%,#ff7a7a,#ff1a1a);color:#ff1a1a;}
+.neon-blue{background:radial-gradient(circle at 30% 25%,#9fe7ff,#00a3ff);color:#00a3ff;}
+.neon-yellow{background:radial-gradient(circle at 30% 25%,#fff6b3,#ffd200);color:#ffd200;}
+.neon-purple{background:radial-gradient(circle at 30% 25%,#e3c9ff,#8a4cff);color:#8a4cff;}
+.neon-green{background:radial-gradient(circle at 30% 25%,#dcff9a,#45ff00);color:#45ff00;}
+.neon-sky{background:radial-gradient(circle at 30% 25%,#cfefff,#4fc9ff);color:#4fc9ff;}
+
+/* Stage layer */
+#stageLayer{pointer-events:none;position:fixed;inset:0;z-index:200;}
+
+/* Animaciones de bola y papel */
+@keyframes paperOpen{0%{height:0;transform:scaleY(0.01);opacity:0}60%{height:120px;transform:scaleY(1.03);opacity:1}100%{height:120px;transform:scaleY(1);opacity:1}}
+.paper{width:200px;height:0;transform-origin:top center;background:#fff;color:#111;border-radius:6px;box-shadow:0 14px 40px rgba(0,0,0,0.6);overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:18px;text-align:center;font-weight:600;}
+.paper .paper-text{width:100%;font-size:16px;line-height:1.2;color:#0b0b0b;}
+
+/* Modal */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:1000;}
+.modal.show{display:flex;}
+.modal-card{background:#0e0e0e;color:#fff;padding:18px;border-radius:8px;max-width:420px;border:1px solid #222;}
+.modal-actions{display:flex;justify-content:flex-end;margin-top:12px;}
+.btn{background:#111;color:#fff;border:0;padding:8px 12px;border-radius:6px;cursor:pointer;}
+
+/* Mariposas base */
+.butterfly {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation-timing-function: linear;
+  z-index: 5;
+  box-shadow: 0 0 6px currentColor, 0 0 12px currentColor, 0 0 20px currentColor;
+  transition: transform 0.2s linear;
+}
+
+/* Rojo */
+.butterfly-red1 { background: #ff4d4d; color:#ff4d4d; }
+.butterfly-red2 { background: #ff1a1a; color:#ff1a1a; }
+
+/* Azul */
+.butterfly-blue1 { background: #0000ff; color:#0000ff; }
+.butterfly-blue2 { background: #3333ff; color:#3333ff; }
+
+/* Azul celeste */
+.butterfly-sky1 { background: #4fc9ff; color:#4fc9ff; }
+.butterfly-sky2 { background: #99e0ff; color:#99e0ff; }
+
+/* Verde */
+.butterfly-green1 { background: #00cc44; color:#00cc44; }
+.butterfly-green2 { background: #33ff66; color:#33ff66; }
+
+/* Morado */
+.butterfly-purple1 { background: #8a4cff; color:#8a4cff; }
+.butterfly-purple2 { background: #b366ff; color:#b366ff; }
+
+/* Blanco */
+.butterfly-white1 { background: #ffffff; color:#ffffff; }
+.butterfly-white2 { background: #f0f0f0; color:#f0f0f0; }
+
+/* Amarillo */
+.butterfly-yellow1 { background: #ffd700; color:#ffd700; }
+.butterfly-yellow2 { background: #fff44f; color:#fff44f; }
+
+@keyframes neonPulse {
+  0%, 100% { box-shadow: 0 0 6px currentColor, 0 0 12px currentColor, 0 0 20px currentColor; }
+  50% { box-shadow: 0 0 12px currentColor, 0 0 24px currentColor, 0 0 40px currentColor; }
+}
+
+.butterfly {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation-timing-function: linear;
+  z-index: 5;
+  animation: neonPulse 1.5s infinite ease-in-out;
+}
